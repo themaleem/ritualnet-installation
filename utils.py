@@ -18,28 +18,31 @@ def update_config_file(filepath, private_key, registry_address):
     try:
         with open(filepath, 'r+') as f:
             data = json.load(f)
+            chain_obj = data['chain']
+            wallet_obj =  chain_obj['wallet']
+            snapshot_sync = chain_obj['snapshot_sync']
             
             # Update rpc_url
-            if 'chain' in data and 'rpc_url' in data['chain']:
-                data['chain']['rpc_url'] = RPC_URL
+            if 'chain' in data and 'rpc_url' in chain_obj:
+                chain_obj['rpc_url'] = RPC_URL
             
             # Update private_key (prompt user)
-            if 'chain' in data and 'wallet' in data['chain'] and 'private_key' in data['chain']['wallet']:
-                data['chain']['wallet']['private_key'] = private_key
+            if 'chain' in data and wallet_obj and 'private_key' in wallet_obj:
+                wallet_obj['private_key'] = private_key
                
             
             # Update registry_address (prompt user with default)
-            if 'chain' in data and 'registry_address' in data['chain']:
-                data['chain']['registry_address'] = registry_address
+            if 'chain' in data and 'registry_address' in chain_obj:
+                chain_obj['registry_address'] = registry_address
             
             # Update snapshot_sync values
-            if 'chain' in data and 'snapshot_sync' in data['chain']:
-                data['chain']['snapshot_sync']['sleep'] = 3
-                data['chain']['snapshot_sync']['batch_size'] = 50
+            if 'chain' in data and 'snapshot_sync' in chain_obj:
+               snapshot_sync['sleep'] = 3
+               snapshot_sync['batch_size'] = 50
             
             # Update trail_head_blocks
-            if 'chain' in data and 'trail_head_blocks' in data['chain']:
-                data['chain']['trail_head_blocks'] = 3
+            if 'chain' in data and 'trail_head_blocks' in chain_obj:
+                chain_obj['trail_head_blocks'] = 3
             
             # Write changes back to file
             f.seek(0)
