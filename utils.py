@@ -1,11 +1,15 @@
 import json
-import os
+import os, re
 
 
-# files_to_update = [
+# config_files = [
 #         os.path.expanduser("~/infernet-container-starter/deploy/config.json"),
 #         os.path.expanduser("~/infernet-container-starter/projects/hello-world/container/config.json")
 #     ]
+
+# solidity_files = [
+#     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
+# ]
 
 RPC_URL = "https://mainnet.base.org/"
 DEFAULT_REGISTRY_ADDRESS="0x3B1554f346DFe5c482Bb4BA31b880c1C18412170"
@@ -53,26 +57,62 @@ def update_config_file(filepath, private_key, registry_address):
     except Exception as e:
         print(f"Error updating {filepath}: {str(e)}")
 
+def update_solidity_files(filepath, registry_address):
+    try:
+        with open(filepath, 'r+') as f:
+            content = f.read()
+            
+            # Find and replace the registry address
+            # This pattern matches the line with address registry assignment
+            pattern = r'(address registry\s*=\s*)(0x[a-fA-F0-9]+);'
+            updated_content = re.sub(
+                pattern,
+                f'\\g<1>{registry_address};',
+                content
+            )
+            
+            # Write changes back to file
+            f.seek(0)
+            f.write(updated_content)
+            f.truncate()
+            
+        print(f"Successfully updated {filepath}")
+    except Exception as e:
+        print(f"Error updating {filepath}: {str(e)}")
+
 def main():
     # Define the files to update
-    files_to_update = [
+    config_files = [
         os.path.expanduser("./deploy.json"),
         os.path.expanduser("./hello.json")
     ]
 
+    sol_files = [
+        os.path.expanduser("./pop.sol")
+    ]
+
     private_key = input("Enter wallet private_key (prefarably a burner): ")
     registry_address = get_registry_address()
-
     
     print("This script will update the following configuration files: ")
-    for file in files_to_update:
+    for file in config_files:
         print(f" - {file}")
     
-    for file in files_to_update:
+    print("\nSolidity files:")
+    for file in sol_files:
+        print(f" - {file}")
+    
+    for file in config_files:
         if os.path.exists(file):
             update_config_file(file, private_key, registry_address)
         else:
-            print(f"File not found: {file}")
+            print(f"Config file not found: {file}")
+
+    for file in sol_files:
+        if os.path.exists(file):
+            update_solidity_files(file, registry_address)
+        else:
+            print(f"Solidity file not found: {file}")
 
 if __name__ == "__main__":
     main()
