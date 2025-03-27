@@ -62,9 +62,19 @@ cd infernet-container-starter
 print_success "Repository cloned."
 
 # Step 5: Create a detached screen and deploy the container
+# print_step "Creating detached screen session for deployment..."
+# screen -dmS ritual bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
+# print_success "Deployment started in screen session."
 print_step "Creating detached screen session for deployment..."
-screen -dmS ritual bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
-print_success "Deployment started in screen session."
+SCREEN_NAME="ritual"
+
+# Start the screen session and run the command
+screen -dmS $SCREEN_NAME bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
+
+# Wait for the screen session to complete: hot fix for now
+print_step "Waiting 5 seconds for deployment to finish..."
+sleep 10
+# print_success "Deployment completed or failed."
 
 # Step 6: Install Python dependencies and run interactive script
 print_step "Installing Python dependencies..."
