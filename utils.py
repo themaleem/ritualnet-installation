@@ -4,24 +4,24 @@ import os, re,  sys
 from ruamel.yaml import YAML
 # from pathlib import Path
 
-# config_files = [
-#         os.path.expanduser("~/infernet-container-starter/deploy/config.json"),
-#         os.path.expanduser("~/infernet-container-starter/projects/hello-world/container/config.json")
-#     ]
+config_files = [
+        os.path.expanduser("~/infernet-container-starter/deploy/config.json"),
+        os.path.expanduser("~/infernet-container-starter/projects/hello-world/container/config.json")
+    ]
 
-# solidity_files = [
-#     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
-# ]
+solidity_files = [
+    os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
+]
 
 # Makefiles
-# makefiles = [
-#     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/Makefile")
-# ]
+makefiles = [
+    os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/Makefile")
+]
 
 # Docker files
-# docker_files = [
-#     os.path.expanduser("~/infernet-container-starter/deploy/docker-compose.yaml")
-# ]
+docker_files = [
+    os.path.expanduser("~/infernet-container-starter/deploy/docker-compose.yaml")
+]
 
 NODE_VERSION = "1.4.0"
 RPC_URL = "https://mainnet.base.org/"
@@ -161,22 +161,23 @@ def get_private_key():
 def main():
     # Define the files to update
     config_files = [
-        os.path.expanduser("./deploy.json"),
-        os.path.expanduser("./hello.json")
+        os.path.expanduser("~/infernet-container-starter/deploy/config.json"),
+        os.path.expanduser("~/infernet-container-starter/projects/hello-world/container/config.json")
     ]
 
-    sol_files = [
-        os.path.expanduser("./pop.sol")
+    solidity_files = [
+        os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
     ]
 
+    # Makefiles
     makefiles = [
-        os.path.expanduser("./Makefile")
+        os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/Makefile")
     ]
 
+    # Docker files
     docker_compose_files = [
-        os.path.expanduser("./deploy.yaml")
+        os.path.expanduser("~/infernet-container-starter/deploy/docker-compose.yaml")
     ]
-
     private_key = get_private_key()
     node_version = get_node_version()
     registry_address = get_registry_address()
@@ -186,7 +187,7 @@ def main():
         print(f" - {file}")
     
     print("\nSolidity files:")
-    for file in sol_files:
+    for file in solidity_files:
         print(f" - {file}")
 
     print("\nMakefiles:")
@@ -203,7 +204,7 @@ def main():
         else:
             print(f"Config file not found: {file}")
 
-    for file in sol_files:
+    for file in solidity_files:
         if os.path.exists(file):
             update_solidity_file(file, registry_address)
         else:
