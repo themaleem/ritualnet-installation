@@ -11,6 +11,11 @@ import os, re
 #     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
 # ]
 
+# Makefiles
+# makefiles = [
+#     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/Makefile")
+# ]
+
 RPC_URL = "https://mainnet.base.org/"
 DEFAULT_REGISTRY_ADDRESS="0x3B1554f346DFe5c482Bb4BA31b880c1C18412170"
 
@@ -57,7 +62,7 @@ def update_config_file(filepath, private_key, registry_address):
     except Exception as e:
         print(f"Error updating {filepath}: {str(e)}")
 
-def update_solidity_files(filepath, registry_address):
+def update_solidity_file(filepath, registry_address):
     try:
         with open(filepath, 'r+') as f:
             content = f.read()
@@ -80,6 +85,39 @@ def update_solidity_files(filepath, registry_address):
     except Exception as e:
         print(f"Error updating {filepath}: {str(e)}")
 
+def update_makefile(filepath, private_key):
+    try:
+        with open(filepath, 'r+') as f:
+            content = f.read()
+            
+            # Update sender: Pattern matches sender assignment with any spacing and optional 0x
+            sender_pattern = r'^(sender\s*:=\s*)(?:0x)?[a-fA-F0-9]+'
+            content = re.sub(
+                sender_pattern,
+                f'\\g<1>{private_key}',
+                content,
+                flags=re.MULTILINE
+            )
+        
+            # Update RPC_URL if provided
+            rpc_pattern = r'^(RPC_URL\s*:=\s*).+'
+            content = re.sub(
+                rpc_pattern,
+                f'\\g<1>{RPC_URL}',
+                content,
+                flags=re.MULTILINE
+            )
+            
+            # Write changes back to file
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+            
+        print(f"Successfully updated Makefile: {filepath}")
+    except Exception as e:
+        print(f"Error updating Makefile {filepath}: {str(e)}")
+
+
 def main():
     # Define the files to update
     config_files = [
@@ -91,8 +129,14 @@ def main():
         os.path.expanduser("./pop.sol")
     ]
 
+    makefiles = [
+        os.path.expanduser("./Makefile")
+    ]
+
     private_key = input("Enter wallet private_key (prefarably a burner): ")
     registry_address = get_registry_address()
+    print(registry_address)
+
     
     print("This script will update the following configuration files: ")
     for file in config_files:
@@ -100,6 +144,10 @@ def main():
     
     print("\nSolidity files:")
     for file in sol_files:
+        print(f" - {file}")
+
+    print("\nMakefiles:")
+    for file in makefiles:
         print(f" - {file}")
     
     for file in config_files:
@@ -110,7 +158,13 @@ def main():
 
     for file in sol_files:
         if os.path.exists(file):
-            update_solidity_files(file, registry_address)
+            update_solidity_file(file, registry_address)
+        else:
+            print(f"Solidity file not found: {file}")
+    
+    for file in makefiles:
+        if os.path.exists(file):
+            update_makefile(file, private_key)
         else:
             print(f"Solidity file not found: {file}")
 
