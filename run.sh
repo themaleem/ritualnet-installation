@@ -94,12 +94,15 @@ fi
 mkdir -p foundry
 cd foundry
 curl -L https://foundry.paradigm.xyz | bash
-source ~/.bashrc
+# kill and restart anvil incase already running
+source /root/.bashrc
+pkill anvil
 foundryup
 
 print_step "Configuring Foundry..."
 cd ~/infernet-container-starter/projects/hello-world/contracts
 rm -rf lib/infernet-sdk
+rm -rf ~/infernet-container-starter/projects/hello-world/contracts/lib/forge-std
 export PATH="/root/.foundry/bin:$PATH"
 
 forge install --no-commit foundry-rs/forge-std
