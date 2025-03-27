@@ -24,25 +24,25 @@ echo -e "${YELLOW}Starting setup script...${NC}"
 
 # Step 1: Install dependencies
 print_step "Updating system and installing dependencies..."
-sudo apt update && sudo apt upgrade -y
-sudo apt -qy install curl git jq lz4 build-essential screen
+# sudo apt update && sudo apt upgrade -y
+# sudo apt -qy install curl git jq lz4 build-essential screen
 # sudo apt install -y docker.io
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+# for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 # Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+# sudo apt-get update
+# sudo apt-get install ca-certificates curl
+# sudo install -m 0755 -d /etc/apt/keyrings
+# sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+# sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-print_success "Dependencies installed."
+# echo \
+#   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+#   $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+#   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# sudo apt-get update
+# sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# print_success "Dependencies installed."
 
 # Step 2: Install Docker Compose if not already installed
 if command -v docker-compose &>/dev/null; then
@@ -67,29 +67,29 @@ print_step "Testing Docker installation..."
 docker run hello-world && print_success "Docker is working!" || print_error "Docker test failed, but continuing..."
 
 # Step 4: Clone the repository
-print_step "Setting up project repository..."
-if [ -d "infernet-container-starter" ]; then
-    print_step "Removing existing repository..."
-    rm -rf infernet-container-starter
-fi
-git clone https://github.com/ritual-net/infernet-container-starter
-cd infernet-container-starter
-print_success "Repository cloned."
+# print_step "Setting up project repository..."
+# if [ -d "infernet-container-starter" ]; then
+#     print_step "Removing existing repository..."
+#     rm -rf infernet-container-starter
+# fi
+# git clone https://github.com/ritual-net/infernet-container-starter
+# cd infernet-container-starter
+# print_success "Repository cloned."
 
 # Step 5: Create a detached screen and deploy the container
 # print_step "Creating detached screen session for deployment..."
 # screen -dmS ritual bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
 # print_success "Deployment started in screen session."
 print_step "Creating detached screen session for deployment..."
-SCREEN_NAME="ritual"
+# SCREEN_NAME="ritual"
 # screen -XS $SCREEN_NAME quit
 
 # Start the screen session and run the command
-screen -dmS $SCREEN_NAME bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
+# screen -dmS $SCREEN_NAME bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
 
 # Wait for the screen session to complete: hot fix for now
 print_step "Waiting 5 seconds for deployment to finish..."
-sleep 10
+# sleep 10
 # print_success "Deployment completed or failed."
 
 # Step 6: Install Python dependencies and run interactive script
@@ -98,9 +98,9 @@ sudo apt install -y python3-ruamel.yaml python3-ruamel.yaml.clib
 print_success "Python dependencies installed."
 
 print_step "Running interactive Python script to update configs..."
-[ -f "ritualnet_config.py" ] && rm ritualnet_config.py
-curl -L -o ritualnet_config.py https://github.com/themaleem/ritualnet-installation/raw/main/utils.py
-python3 /root/ritualnet_config.py
+# [ -f "ritualnet_config.py" ] && rm ritualnet_config.py
+# curl -L -o ritualnet_config.py https://github.com/themaleem/ritualnet-installation/raw/main/utils.py
+python3 ~/ritualnet_config.py
 print_success "Python configuration completed."
 
 # Step 7: Bring up necessary Docker images safely
