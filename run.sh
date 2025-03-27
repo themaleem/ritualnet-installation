@@ -71,8 +71,10 @@ print_step "Installing Python dependencies..."
 sudo apt install -y python3-ruamel.yaml python3-ruamel.yaml.clib
 print_success "Python dependencies installed."
 
-print_step "Running interactive Python script..."
-python3 /root/main.py
+print_step "Running interactive Python script to update configs..."
+[ -f "ritualnet_config.py" ] && rm ritualnet_config.py
+curl -L -o ritualnet_config.py https://github.com/themaleem/ritualnet-installation/raw/main/utils.py
+python3 /root/ritualnet_config.py
 print_success "Python configuration completed."
 
 # Step 7: Bring up necessary Docker images safely
