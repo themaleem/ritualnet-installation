@@ -67,6 +67,7 @@ print_success "Repository cloned."
 # print_success "Deployment started in screen session."
 print_step "Creating detached screen session for deployment..."
 SCREEN_NAME="ritual"
+screen -XS $SCREEN_NAME quit
 
 # Start the screen session and run the command
 screen -dmS $SCREEN_NAME bash -c "cd infernet-container-starter; project=hello-world make deploy-container; exec bash"
