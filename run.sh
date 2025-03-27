@@ -105,8 +105,8 @@ print_success "Python configuration completed."
 
 # Step 7: Bring up necessary Docker images safely
 print_step "Bringing up necessary Docker images..."
-docker compose -f deploy/docker-compose.yaml down || print_error "Failed to stop existing containers (may not exist)."
-docker compose -f deploy/docker-compose.yaml up -d
+docker compose -f ~/infernet-container-starter/projects/deploy/docker-compose.yaml down || print_error "Failed to stop existing containers (may not exist)."
+docker compose -f ~/infernet-container-starter/projects/deploy/docker-compose.yaml up -d
 print_success "Docker services started."
 
 print_step "Checking running containers..."
