@@ -1,6 +1,8 @@
 import json
-import os, re
+import os, re,  sys
 
+from ruamel.yaml import YAML
+# from pathlib import Path
 
 # config_files = [
 #         os.path.expanduser("~/infernet-container-starter/deploy/config.json"),
@@ -16,8 +18,15 @@ import os, re
 #     os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/Makefile")
 # ]
 
+# Docker files
+# docker_files = [
+#     os.path.expanduser("~/infernet-container-starter/deploy/docker-compose.yaml")
+# ]
+
+NODE_VERSION = "1.4.0"
 RPC_URL = "https://mainnet.base.org/"
 DEFAULT_REGISTRY_ADDRESS="0x3B1554f346DFe5c482Bb4BA31b880c1C18412170"
+NODE_VERSION_URL = "https://ritual.academy/nodes/setup/#:~:text=CTRL%20%2B%20X.-,Edit%20Node%20Version,-Change%20the%20node%E2%80%99s"
 
 def get_registry_address():
     user_input = input(f"Enter registry_address [Press Enter to use default: {DEFAULT_REGISTRY_ADDRESS}]: ").strip()
@@ -99,7 +108,6 @@ def update_makefile(filepath, private_key):
                 flags=re.MULTILINE
             )
         
-            # Update RPC_URL if provided
             rpc_pattern = r'^(RPC_URL\s*:=\s*).+'
             content = re.sub(
                 rpc_pattern,
@@ -118,6 +126,38 @@ def update_makefile(filepath, private_key):
         print(f"Error updating Makefile {filepath}: {str(e)}")
 
 
+def update_node_version(filepath, image_version):
+    try:
+        yaml = YAML()
+        yaml.preserve_quotes = True
+        yaml.indent(mapping=2, sequence=4, offset=2)  # Match common Docker Compose indentation
+        
+        with open(filepath, 'r') as f:
+            data = yaml.load(f)
+        
+        if 'services' in data and 'node' in data['services']:
+            data['services']['node']['image'] = image_version
+        
+        with open(filepath, 'w') as f:
+            yaml.dump(data, f)
+        
+        print(f"Successfully updated bode version in: {filepath}")
+    except Exception as e:
+        print(f"Error updating node version {filepath}: {str(e)}")
+
+
+def get_node_version():
+    user_input = input(f"Visit {NODE_VERSION_URL} to get the latest Node version [Or press Enter to use default version: {NODE_VERSION}]: ").strip()
+    return user_input if user_input else NODE_VERSION
+
+def get_private_key():
+    user_input = input("Enter wallet private_key (prefarably a burner): ").strip()
+    if user_input:
+        return user_input 
+    else:
+        print("Private Key is required for this script to continue")
+        sys.exit(1)
+
 def main():
     # Define the files to update
     config_files = [
@@ -133,11 +173,14 @@ def main():
         os.path.expanduser("./Makefile")
     ]
 
-    private_key = input("Enter wallet private_key (prefarably a burner): ")
-    registry_address = get_registry_address()
-    print(registry_address)
+    docker_compose_files = [
+        os.path.expanduser("./deploy.yaml")
+    ]
 
-    
+    private_key = get_private_key()
+    node_version = get_node_version()
+    registry_address = get_registry_address()
+ 
     print("This script will update the following configuration files: ")
     for file in config_files:
         print(f" - {file}")
@@ -149,7 +192,11 @@ def main():
     print("\nMakefiles:")
     for file in makefiles:
         print(f" - {file}")
-    
+
+    print("\nDocker compose files:")
+    for file in docker_compose_files:
+        print(f" - {file}")
+
     for file in config_files:
         if os.path.exists(file):
             update_config_file(file, private_key, registry_address)
@@ -167,6 +214,14 @@ def main():
             update_makefile(file, private_key)
         else:
             print(f"Solidity file not found: {file}")
+
+   
+    for file in docker_compose_files:
+        if os.path.exists(file):
+            update_node_version(file, f"ritualnetwork/infernet-node:{node_version}")
+        else:
+            print(f"Solidity file not found: {file}")
+
 
 if __name__ == "__main__":
     main()
