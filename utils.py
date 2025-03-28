@@ -10,7 +10,7 @@ config_files = [
     ]
 
 solidity_files = [
-    os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
+    os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol")
 ]
 
 # Makefiles
@@ -166,7 +166,7 @@ def main():
     ]
 
     solidity_files = [
-        os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.sol")
+        os.path.expanduser("~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol")
     ]
 
     # Makefiles
