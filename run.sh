@@ -30,7 +30,7 @@ print_success "Dependencies installed."
 
 # Step 2: Install Docker & Docker Compose if not already installed
 install_docker_compose() {
-    print_warning "Docker Compose not found. Installing Docker Compose Plugin..."
+    print_step "Docker Compose not found. Installing Docker Compose Plugin..."
     sudo apt-get update
     sudo apt-get install -y docker-compose-plugin
     
@@ -42,7 +42,7 @@ install_docker_compose() {
 }
 
 setup_docker_repository() {
-    print_warning "Setting up Docker repository..."
+    print_step "Setting up Docker repository..."
     sudo apt-get update
     sudo apt-get install -y ca-certificates curl
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -64,7 +64,7 @@ if command -v docker &> /dev/null; then
         install_docker_compose
     fi
 else
-    print_warning "Docker not found. Installing Docker and Docker Compose..."
+    print_step "Docker not found. Installing Docker and Docker Compose..."
     
     setup_docker_repository
     
