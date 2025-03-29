@@ -147,7 +147,7 @@ def update_node_version(filepath, image_version):
 
 
 def get_node_version():
-    user_input = input(f"Visit {NODE_VERSION_URL} to get the latest Node version [Or press Enter to use default version: {NODE_VERSION}]: ").strip()
+    user_input = input(f"Visit {NODE_VERSION_URL} to get the latest Node version \n[Or press Enter to use default version: {NODE_VERSION}]: ").strip()
     return user_input if user_input else NODE_VERSION
 
 def get_private_key():
